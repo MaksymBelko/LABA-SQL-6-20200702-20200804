@@ -22,7 +22,7 @@ SELECT
 	category_id
 FROM
 	db_laba.dbo.products;
-
+--select * from contacts;
 -- вывести общую сумму цены на сайте
 -- 2/21
  SELECT
@@ -42,6 +42,9 @@ FROM
 FROM
 	db_laba.dbo.products;
 
+1,3,4
+select (1+3+4)/3.00
+
 /*
  * +-------+
  * | COUNT |
@@ -52,28 +55,31 @@ FROM
 -- вывести общее количество строк в таблице заказов
 -- 4/21
  SELECT
-	--*, 1, 112323, 'qewrqewrer'
- COUNT(*)
+	*, 1, 112323, 'qewrqewrer'
+ --COUNT(*)
 FROM
 	db_laba.dbo.orders;
 
-select 1;
+select 1+1; --from dual for Oracle DB
+
 -- вывести количество менеджеров продаж и общее количество строк таблицы заказов
 -- 5/21
  SELECT
 	COUNT(salesman_id) AS count_salesman,
-	COUNT(*) AS count_all,
+	COUNT(*) count_all,
 	COUNT(1) AS count_all_2,
 	COUNT('qqq') AS count_all_3
 FROM
 	db_laba.dbo.orders;
 
+--select count(1) from (SELECT null fff union all select null ) h
+
 -- вывести количество продуктов с уникальными ценами
 -- 6/21
  SELECT
 	COUNT(DISTINCT list_price),
-	COUNT(list_price)--,
-	--COUNT(sum(list_price))
+	COUNT(list_price),
+	COUNT(sum(list_price))
 FROM
 	db_laba.dbo.products;
 
@@ -125,6 +131,14 @@ FROM
 GROUP BY
 	p.category_id;
 
+ /*SELECT
+	min(p.list_price) as sum_list_price,
+	p.product_id 
+FROM
+	db_laba.dbo.products as p
+GROUP BY
+	p.product_id;
+*/
 -- вывести среднее значение цены для каждой категории
 -- для товаров стандартная цена которых выше 1000
 -- 11/21
@@ -132,13 +146,13 @@ SELECT
 	AVG(p.list_price) avg_list_price,
 	round(AVG(p.list_price), 2) raunded_avg_list_price,
 	CAST(round(AVG(p.list_price), 2) AS DECIMAL(10, 2)) raunded_avg_list_price_2,
-	p.category_id
+	p.category_id--, p.product_id 
 FROM
 	db_laba.dbo.products p
 WHERE
 	p.standard_cost > 1000
 GROUP BY
-	p.category_id
+	p.category_id--,product_id
 order by 1;
 /*
 1979.018823	1
@@ -147,18 +161,21 @@ order by 1;
 -- 12/21
 select 1 + 2;
 select '1' + 2;
+select 1 + '2';
 select '1' + '2';
+select '1' + '2sss';
 select '1' + CAST(23333 AS varchar(40))
 select 1 + CAST(2 AS varchar(5))
 
 
 -- вывести 5 первых строк таблицы  деталей заказов
 -- 13/21
-SELECT TOP (50)
+SELECT TOP (5)
 	*
 FROM 
  	db_laba.dbo.order_items
- 	order by 1, 2;
+ 	order by 1, 2
+ --limit 100;
 
 -- вывести суммы в разрезе одного заказа
 -- 14/21
@@ -174,7 +191,7 @@ select * FROM
 	db_laba.dbo.orders
 
 -- вывести суммы в разрезе одного заказа
--- для количества в одном заказе не менее 100 штук
+-- для количества в одном заказе для конкретного товара не менее 100 штук
 -- 15/21
  SELECT
 	SUM(oi.unit_price * oi.quantity) sale,
@@ -214,7 +231,7 @@ ORDER BY 1 DESC;
 FROM
 	db_laba.dbo.order_items oi
 --where SUM(oi.quantity) >= 500
---where oi.quantity >= 50 --500
+--where oi.product_id in (102,258,1)
 GROUP BY
 	oi.product_id
 HAVING SUM(oi.quantity) >= 500
@@ -273,4 +290,3 @@ FROM
 GROUP BY
 	oi.product_id
 ORDER BY 1;
-
