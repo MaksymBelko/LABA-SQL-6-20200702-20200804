@@ -11,21 +11,31 @@
  */
 -- вывести все заказы продавца по фамилии Ortiz
 -- 1/18
- SELECT
+SELECT
 	*
 from
 	db_laba.dbo.orders ord
 where
 	ord.salesman_id =
-	 --employee_id = 61
+	--61
+	--employee_id = 61
 (
-	select --*
-		emp.employee_id
+	select
+		--*
+ emp.employee_id
 		--, emp.email
 
 		from db_laba.dbo.employees emp
 	WHERE
 		emp.last_name = 'Ortiz');
+	
+--formatted https://sqlformat.org/#result
+SELECT *
+FROM db_laba.dbo.orders ord
+WHERE ord.salesman_id =
+    (SELECT emp.employee_id
+     FROM db_laba.dbo.employees emp
+     WHERE emp.last_name = 'Ortiz');
 
 -- вывести все заказы
 -- для продавца, который обслуживал компанию Progressive в 2017 году
@@ -36,8 +46,7 @@ SELECT
 from
 	db_laba.dbo.orders ord
 where
-	ord.salesman_id =
-	-- salesman_id = 18
+	ord.salesman_id in --= --60
 (
 	SELECT
 		--*
@@ -48,11 +57,15 @@ where
 		cus.customer_id = ord0.customer_id
 	where
 		cus.name = 'Progressive'
-		and ord0.salesman_id is NOT NULL )
+		and ord0.salesman_id is NOT NULL
+		)
 	and YEAR(ord.order_date) = 2017
 order by
 	ord.order_date desc;
 
+--104	18	Shipped	60	2017-02-01
+--99	49	Shipped	60	2017-01-07
+--77	1	Shipped	60	2017-01-02
 /*
  * +------------------------------------------------+
  * | Предикаты с подзапросами являются необратимыми |
@@ -72,6 +85,16 @@ where
 		db_laba.dbo.employees emp
 	WHERE
 		emp.last_name = 'Ortiz') = ord.salesman_id;
+/*
+	a=b
+	a-col
+	b-sql
+	
+	ok
+	
+	not ok
+	b=a
+*/
 
 /*
  * +------------------------------------------------+
@@ -83,6 +106,7 @@ where
  select
 	x.order_num,
 	x.price
+	
 from
 	(
 	SELECT
@@ -127,22 +151,25 @@ where
 		AVG(ordi.unit_price * ordi.quantity) avg_price
 	from
 		db_laba.dbo.order_items ordi)
-	and o.order_date BETWEEN '2017-04-01' and '2017-06-30'
+	and
+	o.order_date BETWEEN '2017-04-01' and '2017-06-30'
 order by 6 desc;
+--79311.417503
 
--- вывести номер заказа и его стоимость, имя и web сайт компании, имя и телефон продавца, дату заказа и их стоимость
+-- вывести номер заказа и его стоимость, имя и web сайт компании, имя и телефон продавца, дату заказа 
 -- для заказов 2-го квартала 2017
 -- для продаж выше среднего значения за весь период (по всей таблице)
 -- 6/18
  SELECT
 	o.order_id,
+	x.price_per_order,
 	--o.status,
 	cus.name,
 	cus.website,
 	e.first_name,
 	e.phone,
-	o.order_date,
-	x.price_per_order
+	o.order_date
+	
 from
 	db_laba.dbo.orders o
 inner join (
@@ -176,7 +203,7 @@ where
 SELECT
 	o.order_id,
 	--o.status,
- cus.name,
+    cus.name,
 	cus.website,
 	e.first_name,
 	e.phone,
@@ -224,7 +251,8 @@ where
 	ord.salesman_id IN --=
 (
 	SELECT
-		ord0.salesman_id--, ord0.order_date
+	--DISTINCT 	
+	ord0.salesman_id--, ord0.order_date
 	from
 		db_laba.dbo.orders ord0
 	inner join db_laba.dbo.customers cus on
@@ -262,10 +290,11 @@ where
  */
 
 -- вывести количество клиентов и имя продавца
--- где количестов клиентов болле 20% от количестов клиентов для продавца за 2016 год
+-- где количество клиентов болле 20% от количеств клиентов для продавца за 2016 год
 -- 10/18
 SELECT
 	COUNT(DISTINCT o.customer_id) as customer_amount,
+	--COUNT( o.customer_id) as customer_amount,
 	e.first_name
 from
 	db_laba.dbo.orders o
@@ -316,8 +345,8 @@ having
  from
  	db_laba.dbo.countries c
  where
- 	--EXISTS (
- 	NOT EXISTS (
+ 	EXISTS (
+ 	--NOT EXISTS (
  	SELECT
  		*
  	from
@@ -361,13 +390,12 @@ having
   * | UNION и UNION ALL |
   * +-------------------+
   */
- -- вывести все заказы продавца по фамилии Ortiz
  -- ранжировать вывод по группам
  -- 15/18
   SELECT
  	t1.order_id,
  	SUM(t1.unit_price) price,
- 	'0-5000'
+ 	'0-5000' ttt
  from
  	db_laba.dbo.order_items t1
  group by
@@ -376,10 +404,11 @@ having
  	SUM(t1.unit_price) between 0 and 5000
  union all
  SELECT
+ 	--'qqq',--
  	t1.order_id,
  	SUM(t1.unit_price) price,
  	--1--
- 	'5001-10000'
+ 	'5001-10000' rrrr
  	--,888
  from
  	db_laba.dbo.order_items t1
@@ -387,6 +416,10 @@ having
  	t1.order_id
  HAVING
  	SUM(t1.unit_price) between 5001 and 10000
+ 	--order by
+ 	--3,
+ 	--2,
+ 	--1
  union all
  SELECT
  	t1.order_id,
@@ -411,7 +444,7 @@ having
  	case when  x.price < 5000 then '0-5000'
  	 when  x.price BETWEEN 5000 and 10000 then '5001-10000'
  	 when  x.price >  10000 then '10000+'
- 	end
+ 	end as range_price
  	from (
   SELECT
  	t1.order_id,
@@ -440,7 +473,7 @@ select
 		when price BETWEEN 5000 and 10000 then '5001-10000'
 		when price > 10000 then '10000+' end
 	from
-		sum_per_order
+		sum_per_order o
 	order by
 		3,
 		2,
@@ -457,8 +490,8 @@ select
  		last_name name
  	from
  		db_laba.dbo.employees
- UNION all
- --union
+ --UNION all
+ union
  	SELECT
  		last_name
  	from
