@@ -1,0 +1,35 @@
+Домашнее задание к Занятию 6
+Функции аналитики
+
+1. Выведите все детали заказа и процент количества проданных продуктов от общего заказа
+   для заказов 2016 года (5 баллов)
+	
+2. Выведите 5 первых четных продавцов (примечание: 2, 4, 6, 8 и 10) сортируя по количеству
+   проданных продуктов за все время, но только четные места  (5 баллов)
+
+3. Выведите ID заказчика, дату заказа, ID заказа и стоимость заказа,
+   а так же стоимость предыдущего заказа со смещением в 3 строки (подсказка: LAG с аргументом) (5 баллов)
+
+4. Сформулируйте требования для запроса:
+		SELECT
+		o.customer_id,
+		o.order_date,
+		o.order_id,
+		o2.price,
+		o2.price - FIRST_VALUE(o2.price)
+			OVER(PARTITION BY o.customer_id ORDER BY o.order_date, o.order_id) AS val_firstorder,
+		o2.price - LAST_VALUE(o2.price)
+			OVER(PARTITION BY o.customer_id ORDER BY o.order_date, o.order_id ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) 
+			     AS val_lastorder
+	FROM
+		db_laba.dbo.orders o
+	inner join (
+		select
+			sum(oi.unit_price * oi.quantity) price,
+			oi.order_id
+		from
+			db_laba.dbo.order_items oi
+		group by
+			oi.order_id) o2 on
+		o.order_id = o2.order_id;
+	(5 баллов)
