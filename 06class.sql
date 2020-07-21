@@ -19,22 +19,24 @@
 	,o.quantity
 	--* o.unit_price price
 	--,SUM(o.quantity) SUM_QTY
-	--,SUM(o.quantity) OVER(PARTITION BY o.order_id) AS Total
+	,SUM(o.quantity) OVER(PARTITION BY o.order_id) AS Total
+	--,SUM(o.quantity) OVER() AS Total333
 	--,SUM(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id) AS Total2
-	,AVG(o.quantity)
-		OVER(PARTITION BY o.order_id) AS "Avg"
-	,AVG(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id desc) AS "Avg2"
+	--,AVG(o.quantity) OVER(PARTITION BY o.order_id) AS "Avg"
+	--,AVG(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id desc) AS "Avg2"
+	--,AVG(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id) AS "Avg2"
 	--,COUNT(o.quantity) OVER(PARTITION BY o.order_id) AS "Count"
 	--,COUNT(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id desc) AS "Count2"
 	--,MIN(o.quantity) OVER(PARTITION BY o.order_id) AS "Min"
-	--,MIN(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id desc) AS "Min2"
+	--,MIN(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id) AS "Min2"
 	--,MAX(o.quantity) OVER(PARTITION BY o.order_id) AS "Max"
-	--,MAX(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id desc) AS "Max2"
+	,MAX(o.quantity) OVER(PARTITION BY o.order_id ORDER BY o.item_id desc) AS "Max2"
 from
 	db_laba.dbo.order_items o
 	where o.order_id in (1, 2)
---group by o.order_id,o.quantity
---ORDER BY 1,2--,o.unit_price
+--group by o.order_id--,o.quantity
+ORDER BY 1,2
+--,o.unit_price
 --,o.quantity, o.unit_price
 	--,o.item_id,o.quantity, o.unit_price
 	;
@@ -48,8 +50,8 @@ from
 	x.order_id,
 	x.item_id,
 	x.quantity,
-	x.unit_price,
-	x.Total,
+	--x.unit_price,
+	--x.Total,
 	x.order_date,
 	x.rotation_by_item
 from
@@ -59,10 +61,10 @@ from
 		o.item_id,
 		o0.order_date,
 		o.quantity,
-		o.unit_price,
+	--	o.unit_price,
 		o.quantity * o.unit_price price_per_line,
-		SUM(o.unit_price * o.quantity)
-				OVER(PARTITION BY o.order_id ORDER BY o.quantity desc) AS Total ,
+	--SUM(o.unit_price * o.quantity)
+		--		OVER(PARTITION BY o.order_id) AS Total ,
 		CAST(o.unit_price * o.quantity /
 		     SUM(o.unit_price * o.quantity)
 		     	OVER(PARTITION BY o.order_id) * 100 AS DECIMAL(5,2)) AS rotation_by_item
@@ -72,7 +74,7 @@ from
 		o.order_id = o0.order_id
 		and YEAR(o0.order_date) = YEAR(GETDATE()) -4
 		--AND o0.order_date BETWEEN '2015-01-01' AND '2015-12-31'
-		--order by 1, 8
+	--	order by 1, 6
 		) x
 order by
 	x.order_date,
@@ -90,8 +92,9 @@ select
 	x.first_name,
 	x.last_name,
 	x.phone ,
-	ROW_NUMBER() OVER (ORDER BY x.sold desc, x.order_date) AS Row_Num ,
-	NTILE(4) OVER (ORDER BY x.sold desc) AS Quartile
+	--ROW_NUMBER() OVER (ORDER BY x.sold desc, x.order_date) AS Row_Num --,
+	--,	ROW_NUMBER() OVER (PARTITION by x.order_date ORDER BY x.sold desc, x.order_date) AS Row_Num2 --,
+	NTILE(12) OVER (ORDER BY x.sold desc) AS Quartile
 from
 	(
 	select
@@ -108,7 +111,7 @@ from
 		e.employee_id = o0.salesman_id
 	where
 		year(o0.order_date) = 2017
-		and o0.salesman_id is not null
+		--and o0.salesman_id is not null
 	GROUP BY
 		o0.order_date,
 		e.first_name,
@@ -124,6 +127,8 @@ from
 	y.last_name,
 	y.phone ,
 	y.row_num
+--	,max(y.row_num) over ()
+	--,min(y.row_num) over ()
 from
 	(
 	select
@@ -149,7 +154,7 @@ from
 			e.employee_id = o0.salesman_id
 		where
 			year(o0.order_date) = 2016
-			and o0.salesman_id is not null
+			--and o0.salesman_id is not null
 		GROUP BY
 			o0.order_date,
 			e.first_name,
@@ -165,7 +170,7 @@ where
 	c.name,
 	c.credit_limit,
 	ROW_NUMBER() OVER (ORDER BY c.credit_limit, c.name) AS row_num,
-	RANK() OVER (ORDER BY c.credit_limit) AS Rank ,
+	RANK() OVER (ORDER BY c.credit_limit) AS Rank,
 	DENSE_RANK() OVER (ORDER BY c.credit_limit) AS DENSE_RANK
 from
 	db_laba.dbo.customers c
@@ -217,9 +222,12 @@ WHERE
 	o2.price,
 	FIRST_VALUE(o2.price)
 		OVER (PARTITION BY o.customer_id ORDER BY o.order_date, o.order_id) AS val_firstorder,
+--	FIRST_VALUE(o2.price)
+	--	OVER (PARTITION BY o.customer_id) AS val_firstorder22,
 	LAST_VALUE(o2.price)
 		OVER (PARTITION BY o.customer_id ORDER BY o.order_date, o.order_id
-			ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS val_lastorder
+			ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING
+			) AS val_lastorder
 FROM
 	db_laba.dbo.orders o
 inner join (
