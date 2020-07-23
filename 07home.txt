@@ -27,3 +27,5 @@ SELECT * from db_laba.dbo.employees_test_student t where t.student_name = 'm.bel
 5. Удалите строки из таблицы employees_test_student для сотрудников
    в телефоне которых цифра 2 встречается только два раза
    напишите запрос для проверки (4 балла)
+   
+6* Подсчитать количесво букв о в слове молоко

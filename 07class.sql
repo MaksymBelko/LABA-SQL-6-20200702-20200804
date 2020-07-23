@@ -49,6 +49,7 @@ where t.student_name = 'm.belko';
 
 -- 2/22
 delete from
+--SELECT * FROM 
 	db_laba.dbo.employees_test_student
 WHERE
 	employee_id = 0 and student_name = 'm.belko';
@@ -205,7 +206,7 @@ CAST('2019-11-01' as date),
 -- 8/22
  INSERT
 	INTO
-	db_laba.dbo.employees_test_student (employee_id,
+	db_laba.dbo.employees_test_student (employee_id1,
 	first_name,
 	last_name,
 	email,
@@ -404,6 +405,7 @@ from
  */
 -- 18/22
 delete
+--SELECT * 
 from
 	db_laba.dbo.employees_test_student
 where
@@ -445,6 +447,13 @@ where
 		db_laba.dbo.orders)
 	and hire_date is null
 and student_name = 'm.belko';
+
+select
+	*
+from
+	db_laba.dbo.employees_test_student
+WHERE
+	job_title IN ('Programmer2', 'Programmer2')
 
 /* +-----------------------------------+
  * | Использование подзапросов с MERGE |
