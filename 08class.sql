@@ -16,6 +16,8 @@ drop table if exists db_laba.dbo.customers_mbelko;
 drop table if exists db_laba.dbo.employees_test_01_mbelko;
 drop table if exists db_laba.dbo.countries_test_03_mbelko;
 
+drop table db_laba.dbo.countries_test_mbelko;
+
 
 /* +----------------------------+
  * | Создание и удалени таблицы |
@@ -67,7 +69,9 @@ sp_help countries_test_mbelko;
 -- 3/31
 SELECT name, type_desc, is_unique, is_primary_key--,*
 FROM sys.indexes
-WHERE object_id = OBJECT_ID('dbo.countries_test_mbelko');
+WHERE object_id = OBJECT_ID('dbo.countries_test_mbelko'); -- 1594853144
+
+SELECT OBJECT_ID('dbo.countries_test_mbelko');
 
 -- 4/31
 CREATE UNIQUE INDEX UQ_countries_test_mbelko ON db_laba.dbo.countries_test_mbelko (name);
@@ -96,7 +100,7 @@ SELECT * from db_laba.dbo.countries_test_mbelko;
 
 SELECT ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'countries_test_mbelko';
+WHERE TABLE_NAME = 'countries_test_mbelko';--'customers'--
 
 /* +-----------------------------------+
  * | Ограничение значений ваших данных |
@@ -343,15 +347,19 @@ drop table if exists db_laba.dbo.Salespeople_01_mbelko;
 CREATE TABLE db_laba.dbo.Salespeople_01_mbelko 
 (snum integer NOT NULL UNIQUE,
 sname char(10) NOT NULL UNIQUE,
-city char(10) CHECK (city IN ('London',
-'New York',
-'San Jose',
-'Barselona')),
+city char(10) CHECK (city IN (	'London',
+								'New York',
+								'San Jose',
+								'Barselona')),
 comm decimal CHECK (comm<1));
 
 --err The INSERT statement conflicted with the CHECK constraint "CK__Salespeopl__city__0C50D423". T
 -- 29/31
-insert into db_laba.dbo.Salespeople_01_mbelko(snum,sname,city,comm) VALUES(1,'test02','Kyiv',0.2 );
+insert into db_laba.dbo.Salespeople_01_mbelko(snum,sname,city,comm) 
+VALUES(1,'test02','Kyiv',0.2 );
+
+insert into db_laba.dbo.Salespeople_01_mbelko(snum,sname,city,comm) 
+VALUES(1,'test02','London',0.2 );
 
 /* +---------------------------------+
  * | Установка значений по умолчанию |
@@ -377,3 +385,15 @@ VALUES(1,
 0.2 );
 
 select * from db_laba.dbo.Salespeople_02_mbelko;
+
+insert
+	into
+	db_laba.dbo.Salespeople_02_mbelko
+	(snum,
+	sname,
+	city,
+	comm)
+VALUES(2,
+'test03',
+null,
+0.2 );
