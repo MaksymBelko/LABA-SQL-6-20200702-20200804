@@ -109,6 +109,7 @@ values
 ('UA',
 'Ukraine',
 9);
+--SELECT * from regions_01_mbelko rm 
 
 
 -- 6/25
@@ -205,7 +206,7 @@ from
 SELECT
 	*
 from
-	db_laba.dbo.countries_02_mbelko;-- where region_id = 3;
+	db_laba.dbo.countries_02_mbelko where region_id = 3;
 
 select *  from db_laba.dbo.countries_02_mbelko where country_name = 'Australia';
 
@@ -264,7 +265,8 @@ INSERT INTO db_laba.dbo.employees_03_mbelko
 (employee_id, first_name, last_name, email, phone, hire_date, manager_id, job_title)
 VALUES(999, 'test', 'test', 'test', 'test', getdate(), 1, 'test');
 
-select * from db_laba.dbo.employees_03_mbelko where employee_id between 1 and 10 or employee_id = 1000;
+select * from db_laba.dbo.employees_03_mbelko 
+where employee_id between 1 and 10 or employee_id = 999;
 
 -- 18/25
 select min(employee_id) from db_laba.dbo.employees_03_mbelko
@@ -272,13 +274,15 @@ select min(employee_id) from db_laba.dbo.employees_03_mbelko
 -- 19/25
 INSERT INTO db_laba.dbo.employees_03_mbelko
 (employee_id, first_name, last_name, email, phone, hire_date, manager_id, job_title)
-VALUES(1000, 'test', 'test', 'test', 'test', getdate(), (select min(employee_id) from db_laba.dbo.employees_03_mbelko), 'test');
+VALUES(1000, 'test', 'test', 'test', 'test', getdate(), 
+	   (select min(employee_id) from db_laba.dbo.employees_03_mbelko), 'test');
 
 --err INSERT INTO db_laba.dbo.employees_03_mbelko
 -- 20/25
 INSERT INTO db_laba.dbo.employees_03_mbelko
 (employee_id, first_name, last_name, email, phone, hire_date, manager_id, job_title)
-VALUES(1001, 'test', 'test', 'test', 'test', getdate(), (select min(employee_id) -1 from db_laba.dbo.employees_03_mbelko), 'test');
+VALUES(1001, 'test', 'test', 'test', 'test', getdate(), 
+       (select min(employee_id) -1 from db_laba.dbo.employees_03_mbelko), 'test');
 
 --err INSERT INTO db_laba.dbo.employees_03_mbelko
 -- 21/25
@@ -309,9 +313,10 @@ select * from dbo.customers_ny;
 -- 23/25
 ALTER VIEW dbo.customers_ny
 AS  
-SELECT customer_id, name--*  
+SELECT customer_id, name--*
 from db_laba.dbo.customers
 where RIGHT(address, 2) = 'NY' and credit_limit >= 1500;
+
 --
 /* +-----------------------------------+
  * | Что не могут делать представления |
@@ -324,10 +329,10 @@ AS
 SELECT customer_id, name
 from db_laba.dbo.customers
 where RIGHT(address, 2) = 'NY'
-order by name;
+--order by name;
 
 
-select * from customers_ny_mi;
+select * from customers_ny2;
 select * from dbo.customers_ny order by name;
 
 --
