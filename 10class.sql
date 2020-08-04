@@ -2,7 +2,7 @@
  * #################################################
  * #     Занятие 10                                #  
  * #     Настройки пользователей в базе данных     #
- * #################################################
+ * ########]#########################################
  */
 /* +-----------------------------------+
  * | Создание и удаление пользователей |
@@ -94,11 +94,17 @@ select * from db_laba.dbo.regions;
 GRANT SELECT, INSERT, UPDATE, DELETE ON OBJECT :: "dbo"."countries_02_mbelko" TO "student_test";
 REVOKE SELECT, INSERT, UPDATE, DELETE ON OBJECT :: "dbo"."countries_02_mbelko" FROM "student_test";
 
+--delete from db_laba.dbo.countries_02_mbelko; 
+--delete from db_laba.dbo.regions_02_mbelko;
+--insert into  db_laba.dbo.regions_02_mbelko select * from db_laba.dbo.regions;
+
 
 GRANT REFERENCES ON OBJECT :: "dbo"."countries_02_mbelko"(country_id) TO "student_test";
 REVOKE REFERENCES ON OBJECT :: "dbo"."countries_02_mbelko"(country_id) FROM "student_test";
 
+--ALTER ROLE db_ddladmin ADD MEMBER "student_test";
 --GRANT INSERT ON OBJECT :: "dbo"."Audit_DDL_Events" TO "student_test";
+
 
 GRANT SELECT ON OBJECT :: "dbo"."countries_test_03_mbelko" TO "student_test";
 REVOKE SELECT ON OBJECT :: "dbo"."countries_test_03_mbelko" FROM "student_test";

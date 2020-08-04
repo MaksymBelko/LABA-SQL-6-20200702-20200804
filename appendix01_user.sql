@@ -33,7 +33,8 @@ go
 
 DENY INSERT, delete, update ON OBJECT::dbo.test TO student;
 use db_laba
-SELECT 'DENY INSERT, delete, update ON OBJECT :: "' + TABLE_SCHEMA + '"."' + TABLE_NAME + '" TO "student";' FROM information_schema.tables
+SELECT 'DENY INSERT, delete, update ON OBJECT :: "' + TABLE_SCHEMA + '"."' + TABLE_NAME + '" TO "student";'
+FROM information_schema.tables
 go
 
 DENY INSERT, delete, update ON OBJECT :: "dbo"."regions" TO "student";
