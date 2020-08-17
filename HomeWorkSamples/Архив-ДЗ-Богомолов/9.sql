@@ -1,5 +1,5 @@
-/*1. Создайте таблицу с именем invoices_<name> (придумайте перечень колонок самостоятельно) 
-Таблица должна содержать все необходимые ограничения и первичные ключи. (5 баллов)*/
+/*1. РЎРѕР·РґР°Р№С‚Рµ С‚Р°Р±Р»РёС†Сѓ СЃ РёРјРµРЅРµРј invoices_<name> (РїСЂРёРґСѓРјР°Р№С‚Рµ РїРµСЂРµС‡РµРЅСЊ РєРѕР»РѕРЅРѕРє СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ) 
+РўР°Р±Р»РёС†Р° РґРѕР»Р¶РЅР° СЃРѕРґРµСЂР¶Р°С‚СЊ РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ Рё РїРµСЂРІРёС‡РЅС‹Рµ РєР»СЋС‡Рё. (5 Р±Р°Р»Р»РѕРІ)*/
 
 DROP TABLE IF EXISTS db_laba.dbo.invoices_bogomolov;
 
@@ -26,7 +26,7 @@ Left Join (Select * From sys.foreign_key_columns) As D On D.constraint_object_id
 Where C.parent_object_id = (Select object_id From sys.objects Where type = 'U'
 And name = 'invoices_bogomolov');
 
---наполняем данными таблицу
+--РЅР°РїРѕР»РЅСЏРµРј РґР°РЅРЅС‹РјРё С‚Р°Р±Р»РёС†Сѓ
 
     INSERT into db_laba.dbo.invoices_bogomolov
     (invoice_id,
@@ -41,7 +41,7 @@ And name = 'invoices_bogomolov');
     (2,CAST('2016-12-03' as date),105,'EUR','Ewallet',CAST('2016-12-30' as date),'test n');
 
     /*
-    (3,CAST('2000-01-01' as date),106,'RUR','Cash',CAST('2000-01-20' as date),'test number 3'); -- здесь проверял связи с таблицей orders (в ней нет 106 заказа). Insert невозможен. Ниже небольшая проверка - список заказов по убыванию.
+    (3,CAST('2000-01-01' as date),106,'RUR','Cash',CAST('2000-01-20' as date),'test number 3'); -- Р·РґРµСЃСЊ РїСЂРѕРІРµСЂСЏР» СЃРІСЏР·Рё СЃ С‚Р°Р±Р»РёС†РµР№ orders (РІ РЅРµР№ РЅРµС‚ 106 Р·Р°РєР°Р·Р°). Insert РЅРµРІРѕР·РјРѕР¶РµРЅ. РќРёР¶Рµ РЅРµР±РѕР»СЊС€Р°СЏ РїСЂРѕРІРµСЂРєР° - СЃРїРёСЃРѕРє Р·Р°РєР°Р·РѕРІ РїРѕ СѓР±С‹РІР°РЅРёСЋ.
 
      SELECT * 
        FROM db_laba.dbo.orders
@@ -55,9 +55,9 @@ SELECT *
 FROM db_laba.dbo.invoices_bogomolov
 
 
-/*2. Создайте таблицу с именем invoices_details_<name> (придумайте перечень колонок самостоятельно) 
-Таблица должна содержать все необходимые ограничения и связь с таблицей invoices_<name>.
-Продемонстрируйте тестовыми изменениями целостность данных (5 баллов)*/
+/*2. РЎРѕР·РґР°Р№С‚Рµ С‚Р°Р±Р»РёС†Сѓ СЃ РёРјРµРЅРµРј invoices_details_<name> (РїСЂРёРґСѓРјР°Р№С‚Рµ РїРµСЂРµС‡РµРЅСЊ РєРѕР»РѕРЅРѕРє СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ) 
+РўР°Р±Р»РёС†Р° РґРѕР»Р¶РЅР° СЃРѕРґРµСЂР¶Р°С‚СЊ РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ Рё СЃРІСЏР·СЊ СЃ С‚Р°Р±Р»РёС†РµР№ invoices_<name>.
+РџСЂРѕРґРµРјРѕРЅСЃС‚СЂРёСЂСѓР№С‚Рµ С‚РµСЃС‚РѕРІС‹РјРё РёР·РјРµРЅРµРЅРёСЏРјРё С†РµР»РѕСЃС‚РЅРѕСЃС‚СЊ РґР°РЅРЅС‹С… (5 Р±Р°Р»Р»РѕРІ)*/
 
  DROP TABLE IF EXISTS db_laba.dbo.invoices_details_bogomolov;
 
@@ -72,7 +72,7 @@ FROM db_laba.dbo.invoices_bogomolov
       REFERENCES db_laba.dbo.products ( product_id ),
     CONSTRAINT FK_invoices_details_invoices_bogomolov FOREIGN KEY( invoice_id )
       REFERENCES db_laba.dbo.invoices_bogomolov ( invoice_id ));
-     -- ON DELETE CASCADE);  --- второй вариант
+     -- ON DELETE CASCADE);  --- РІС‚РѕСЂРѕР№ РІР°СЂРёР°РЅС‚
 
       --check
 Select C.*, (Select definition From sys.default_constraints Where object_id = C.object_id) As dk_definition,
@@ -85,7 +85,7 @@ Where C.parent_object_id = (Select object_id From sys.objects Where type = 'U'
 And name = 'invoices_details_bogomolov');
 
       
-      --наполним немного данными таблицу
+      --РЅР°РїРѕР»РЅРёРј РЅРµРјРЅРѕРіРѕ РґР°РЅРЅС‹РјРё С‚Р°Р±Р»РёС†Сѓ
 
     INSERT into db_laba.dbo.invoices_details_bogomolov
     (line_id,
@@ -103,7 +103,7 @@ And name = 'invoices_details_bogomolov');
     from db_laba.dbo.invoices_details_bogomolov
 
 
-    --тест на удаление invoice_id из db_laba.dbo.invoices_bogomolov (если использовать CASCADE)
+    --С‚РµСЃС‚ РЅР° СѓРґР°Р»РµРЅРёРµ invoice_id РёР· db_laba.dbo.invoices_bogomolov (РµСЃР»Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ CASCADE)
     
 SELECT * 
 FROM db_laba.dbo.invoices_bogomolov  
@@ -112,15 +112,15 @@ DELETE FROM db_laba.dbo.invoices_bogomolov
 WHERE invoice_id = 1
 
 SELECT * 
-FROM db_laba.dbo.invoices_details_bogomolov -- детали по invoice_id = 1 исчезли из таблицы
+FROM db_laba.dbo.invoices_details_bogomolov -- РґРµС‚Р°Р»Рё РїРѕ invoice_id = 1 РёСЃС‡РµР·Р»Рё РёР· С‚Р°Р±Р»РёС†С‹
 
 
-     --тест на удаление invoice_id из db_laba.dbo.invoices_bogomolov (БЕЗ CASCADE)
+     --С‚РµСЃС‚ РЅР° СѓРґР°Р»РµРЅРёРµ invoice_id РёР· db_laba.dbo.invoices_bogomolov (Р‘Р•Р— CASCADE)
 
 DELETE FROM db_laba.dbo.invoices_bogomolov  
-WHERE invoice_id = 1  -- выдаёт ошибку. Не позволяет удалить из-за связей с таблицей db_laba.dbo.invoices_details_bogomolov
+WHERE invoice_id = 1  -- РІС‹РґР°С‘С‚ РѕС€РёР±РєСѓ. РќРµ РїРѕР·РІРѕР»СЏРµС‚ СѓРґР°Р»РёС‚СЊ РёР·-Р·Р° СЃРІСЏР·РµР№ СЃ С‚Р°Р±Р»РёС†РµР№ db_laba.dbo.invoices_details_bogomolov
 
-     --тест на внесение line_id по несуществующему invoice_id
+     --С‚РµСЃС‚ РЅР° РІРЅРµСЃРµРЅРёРµ line_id РїРѕ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРјСѓ invoice_id
 
      INSERT into db_laba.dbo.invoices_details_bogomolov
     (line_id,
@@ -128,9 +128,9 @@ WHERE invoice_id = 1  -- выдаёт ошибку. Не позволяет удалить из-за связей с табл
     product_id,
     quantity)
     VALUES 
-    (13,3,33,19);  -- выдаёт ошибку, т.к. нет такого invoice_id в таблице db_laba.dbo.invoices_bogomolov  
+    (13,3,33,19);  -- РІС‹РґР°С‘С‚ РѕС€РёР±РєСѓ, С‚.Рє. РЅРµС‚ С‚Р°РєРѕРіРѕ invoice_id РІ С‚Р°Р±Р»РёС†Рµ db_laba.dbo.invoices_bogomolov  
      
-     --тест на внесение line_id по несуществующему product_id
+     --С‚РµСЃС‚ РЅР° РІРЅРµСЃРµРЅРёРµ line_id РїРѕ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРјСѓ product_id
 
      select *
      from db_laba.dbo.products
@@ -143,9 +143,9 @@ WHERE invoice_id = 1  -- выдаёт ошибку. Не позволяет удалить из-за связей с табл
     product_id,
     quantity)
     VALUES 
-    (14,1,289,100);  -- выдаёт ошибку, т.к. нет такого product_id в таблице db_laba.dbo.products
+    (14,1,289,100);  -- РІС‹РґР°С‘С‚ РѕС€РёР±РєСѓ, С‚.Рє. РЅРµС‚ С‚Р°РєРѕРіРѕ product_id РІ С‚Р°Р±Р»РёС†Рµ db_laba.dbo.products
 
-    -- здесь просто добавляю еще один line_id для invoice_id = 2.
+    -- Р·РґРµСЃСЊ РїСЂРѕСЃС‚Рѕ РґРѕР±Р°РІР»СЏСЋ РµС‰Рµ РѕРґРёРЅ line_id РґР»СЏ invoice_id = 2.
 
  INSERT into db_laba.dbo.invoices_details_bogomolov
     (line_id,
@@ -162,9 +162,9 @@ DELETE FROM db_laba.dbo.invoices_details_bogomolov
 WHERE line_id=13 and invoice_id=2 
 
 
-/*3. Используя наши старые таблицы для обучения (не нужно использовать таблицы из пунктов 1 и 2), создайте представление которое будет содержать 
-количество заказов, год продажи, имя и фамилию продавца
-имя созданного представления должно отображать содержимое (5 баллов)*/
+/*3. РСЃРїРѕР»СЊР·СѓСЏ РЅР°С€Рё СЃС‚Р°СЂС‹Рµ С‚Р°Р±Р»РёС†С‹ РґР»СЏ РѕР±СѓС‡РµРЅРёСЏ (РЅРµ РЅСѓР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚Р°Р±Р»РёС†С‹ РёР· РїСѓРЅРєС‚РѕРІ 1 Рё 2), СЃРѕР·РґР°Р№С‚Рµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ 
+РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ, РіРѕРґ РїСЂРѕРґР°Р¶Рё, РёРјСЏ Рё С„Р°РјРёР»РёСЋ РїСЂРѕРґР°РІС†Р°
+РёРјСЏ СЃРѕР·РґР°РЅРЅРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РґРѕР»Р¶РЅРѕ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ (5 Р±Р°Р»Р»РѕРІ)*/
 
 CREATE VIEW dbo.orders_details_by_year_abogomolov
 AS
@@ -175,7 +175,7 @@ SELECT
     e.last_name
 FROM
     db_laba.dbo.orders as o
-inner join db_laba.dbo.employees as e on -- т.к. нужны конкретные фамилии, то делаем  inner
+inner join db_laba.dbo.employees as e on -- С‚.Рє. РЅСѓР¶РЅС‹ РєРѕРЅРєСЂРµС‚РЅС‹Рµ С„Р°РјРёР»РёРё, С‚Рѕ РґРµР»Р°РµРј  inner
     o.salesman_id = e.employee_id
 GROUP BY
     YEAR(o.order_date),
@@ -187,7 +187,7 @@ FROM dbo.orders_details_by_year_abogomolov
 
 DROP VIEW if exists dbo.orders_details_by_year_abogomolov
 
-/*4. Измените представление из пункта 3, добавьте в вывод имя, фамилию и телефон менеджера для продавца (5 баллов)*/
+/*4. РР·РјРµРЅРёС‚Рµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РёР· РїСѓРЅРєС‚Р° 3, РґРѕР±Р°РІСЊС‚Рµ РІ РІС‹РІРѕРґ РёРјСЏ, С„Р°РјРёР»РёСЋ Рё С‚РµР»РµС„РѕРЅ РјРµРЅРµРґР¶РµСЂР° РґР»СЏ РїСЂРѕРґР°РІС†Р° (5 Р±Р°Р»Р»РѕРІ)*/
 
 ALTER VIEW dbo.orders_details_by_year_abogomolov AS
 SELECT
@@ -217,10 +217,10 @@ FROM dbo.orders_details_by_year_abogomolov
 
 DROP VIEW if exists dbo.orders_details_by_year_abogomolov
 
-/* ниже небольшая проверка, правильно ли вывелось всё.
+/* РЅРёР¶Рµ РЅРµР±РѕР»СЊС€Р°СЏ РїСЂРѕРІРµСЂРєР°, РїСЂР°РІРёР»СЊРЅРѕ Р»Рё РІС‹РІРµР»РѕСЃСЊ РІСЃС‘.
 select * 
 from db_laba.dbo.employees
-where last_name = 'Freeman'  -- у него manager_id = 48, a employee_id = 64
+where last_name = 'Freeman'  -- Сѓ РЅРµРіРѕ manager_id = 48, a employee_id = 64
 
 select * 
 from db_laba.dbo.employees
